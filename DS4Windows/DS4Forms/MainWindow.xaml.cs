@@ -27,6 +27,8 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using WpfAnimatedGif;
 using Microsoft.Win32;
 using System.Windows.Interop;
 using System.Diagnostics;
@@ -88,9 +90,71 @@ namespace DS4WinWPF.DS4Forms
             ProcessPriorityClass.High, ProcessPriorityClass.RealTime
         ];
 
+
+        private string CustomBackgroundSettingsPath
+        {
+            get
+            {
+                string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DS4Windows");
+                Directory.CreateDirectory(folder);
+                return Path.Combine(folder, "custom-background.txt");
+            }
+        }
+
+        private void ChooseBackgroundBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog
+            {
+                Title = "Choose a background image or animated GIF",
+                Filter = "Images and animated GIFs|*.png;*.jpg;*.jpeg;*.bmp;*.gif|All files|*.*",
+                CheckFileExists = true
+            };
+            if (dialog.ShowDialog(this) == true)
+            {
+                try
+                {
+                    File.WriteAllText(CustomBackgroundSettingsPath, dialog.FileName);
+                    ApplyCustomBackground(dialog.FileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this, "Could not load that background. " + ex.Message, "死", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+        }
+
+        private void LoadCustomBackground()
+        {
+            try
+            {
+                if (File.Exists(CustomBackgroundSettingsPath))
+                {
+                    string path = File.ReadAllText(CustomBackgroundSettingsPath).Trim();
+                    if (File.Exists(path))
+                        ApplyCustomBackground(path);
+                }
+            }
+            catch
+            {
+                // A missing or invalid custom background should not prevent DS4Windows from starting.
+            }
+        }
+
+        private void ApplyCustomBackground(string path)
+        {
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.CacheOption = BitmapCacheOption.OnLoad;
+            image.UriSource = new Uri(path, UriKind.Absolute);
+            image.EndInit();
+            image.Freeze();
+            ImageBehavior.SetAnimatedSource(CustomBackgroundImage, image);
+        }
+
         public MainWindow(ArgumentParser parser)
         {
             InitializeComponent();
+            LoadCustomBackground();
 
             mainWinVM = new MainWindowsViewModel();
             DataContext = mainWinVM;
