@@ -1,0 +1,39 @@
+name: Build customized DS4Windows (Windows)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'DS4Windows/**'
+      - '.github/workflows/build-windows.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Publish Windows x64 app
+        run: dotnet publish "DS4Windows/DS4WinWPF.csproj" --configuration Release --runtime win-x64 --self-contained true -p:Platform=x64 -p:PublishSingleFile=false --output "${{ github.workspace }}/publish"
+
+      - name: Package executable
+        shell: pwsh
+        run: Compress-Archive -Path "publish/*" -DestinationPath "DS4Windows-Windows-x64.zip" -Force
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: DS4Windows-Windows-x64
+          path: DS4Windows-Windows-x64.zip
+          if-no-files-found: error
+          retention-days: 14
