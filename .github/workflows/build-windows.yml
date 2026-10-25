@@ -31,12 +31,12 @@ jobs:
           $g = [System.Drawing.Graphics]::FromImage($bmp)
           $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
           $g.Clear([System.Drawing.Color]::FromArgb(8, 4, 4))
-          $font = New-Object System.Drawing.Font("Microsoft YaHei", 150, [System.Drawing.FontStyle]::Bold, [System.Drawing.GraphicsUnit]::Pixel)
-          $brush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255, 235, 20, 25))
-          $format = New-Object System.Drawing.StringFormat
+          $font = [System.Drawing.Font]::new("Microsoft YaHei", 150, [System.Drawing.FontStyle]::Bold, [System.Drawing.GraphicsUnit]::Pixel)
+          $brush = [System.Drawing.SolidBrush]::new([System.Drawing.Color]::FromArgb(255, 235, 20, 25))
+          $format = [System.Drawing.StringFormat]::new()
           $format.Alignment = [System.Drawing.StringAlignment]::Center
           $format.LineAlignment = [System.Drawing.StringAlignment]::Center
-          $g.DrawString("死", $font, $brush, (New-Object System.Drawing.RectangleF(0,0,256,256)), $format)
+          $g.DrawString("死", $font, $brush, ([System.Drawing.RectangleF]::new(0,0,256,256)), $format)
           $hIcon = $bmp.GetHicon()
           $icon = [System.Drawing.Icon]::FromHandle($hIcon)
           $stream = [System.IO.File]::Create("DS4Windows/DS4W.ico")
