@@ -23,6 +23,29 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      - name: Generate red 死 application icon
+        shell: pwsh
+        run: |
+          Add-Type -AssemblyName System.Drawing
+          $bmp = New-Object System.Drawing.Bitmap 256,256
+          $g = [System.Drawing.Graphics]::FromImage($bmp)
+          $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+          $g.Clear([System.Drawing.Color]::FromArgb(8, 4, 4))
+          $font = New-Object System.Drawing.Font("Microsoft YaHei", 150, [System.Drawing.FontStyle]::Bold, [System.Drawing.GraphicsUnit]::Pixel)
+          $brush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255, 235, 20, 25))
+          $format = New-Object System.Drawing.StringFormat
+          $format.Alignment = [System.Drawing.StringAlignment]::Center
+          $format.LineAlignment = [System.Drawing.StringAlignment]::Center
+          $g.DrawString("死", $font, $brush, (New-Object System.Drawing.RectangleF(0,0,256,256)), $format)
+          $hIcon = $bmp.GetHicon()
+          $icon = [System.Drawing.Icon]::FromHandle($hIcon)
+          $stream = [System.IO.File]::Create("DS4Windows/DS4W.ico")
+          $icon.Save($stream)
+          $stream.Close()
+          $icon.Dispose()
+          $g.Dispose()
+          $bmp.Dispose()
+
       - name: Publish Windows x64 app
         run: dotnet publish "DS4Windows/DS4WinWPF.csproj" --configuration Release --runtime win-x64 --self-contained true -p:Platform=x64 -p:PublishSingleFile=false --output "${{ github.workspace }}/publish"
 
