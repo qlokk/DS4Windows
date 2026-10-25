@@ -20,7 +20,9 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <local:ImageLocationPaths x:Key="ImgLocPaths" />
     </Window.Resources>
-    <DockPanel>
+    <Grid>
+        <Image x:Name="CustomBackgroundImage" Stretch="UniformToFill" Opacity="0.28" IsHitTestVisible="False" />
+        <DockPanel>
         <tb:TaskbarIcon x:Name="notifyIcon" IconSource="{Binding IconSource,Mode=OneWay}" ToolTipText="{Binding TooltipText,Mode=OneWay}" MenuActivation="RightClick" TrayRightMouseUp="NotifyIcon_TrayRightMouseUp" TrayMiddleMouseDown="NotifyIcon_TrayMiddleMouseDown" TrayMouseDoubleClick="NotifyIcon_TrayMouseDoubleClick">
             <!--<tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
@@ -38,6 +40,7 @@
                             Style="{StaticResource NoBGHoverBtn}" Click="AboutBtn_Click">
                         <TextBlock Text="{lex:Loc HotkeysAbout}" TextDecorations="Underline" Foreground="{DynamicResource AccentColor}" Cursor="Hand" x:Uid="hotkeysText" />
                     </Button>
+                    <Button Content="Background…" Margin="4,0" Click="ChooseBackgroundBtn_Click" Height="20" Foreground="{DynamicResource ForegroundColor}" />
                     <Button x:Name="StartStopBtn" Content="{lex:Loc StartText}" Margin="10,0,4,0" Click="StartStopBtn_Click" Width="60" Height="20" Foreground="{DynamicResource ForegroundColor}" />
                 </StackPanel>
                 <Label x:Name="lastMsgLb" Content="{Binding Message}" ToolTip="{Binding Message}" Foreground="{Binding Color}" Margin="4,0,2,0" />
@@ -497,5 +500,6 @@
             </TabItem>
 
         </TabControl>
-    </DockPanel>
+        </DockPanel>
+    </Grid>
 </Window>
