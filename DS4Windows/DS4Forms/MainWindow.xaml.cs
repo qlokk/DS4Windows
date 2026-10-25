@@ -28,7 +28,6 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using WpfAnimatedGif;
 using Microsoft.Win32;
 using System.Windows.Interop;
 using System.Diagnostics;
@@ -148,7 +147,7 @@ namespace DS4WinWPF.DS4Forms
             image.UriSource = new Uri(path, UriKind.Absolute);
             image.EndInit();
             image.Freeze();
-            ImageBehavior.SetAnimatedSource(CustomBackgroundImage, image);
+            CustomBackgroundImage.Source = image;
         }
 
         public MainWindow(ArgumentParser parser)
