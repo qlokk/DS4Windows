@@ -22,6 +22,7 @@
     </Window.Resources>
     <Grid>
         <Image x:Name="CustomBackgroundImage" Stretch="UniformToFill" Opacity="0.28" IsHitTestVisible="False" />
+        <Image x:Name="CustomOverlayImage" Stretch="UniformToFill" Opacity="0.72" IsHitTestVisible="False" />
         <DockPanel>
         <tb:TaskbarIcon x:Name="notifyIcon" IconSource="{Binding IconSource,Mode=OneWay}" ToolTipText="{Binding TooltipText,Mode=OneWay}" MenuActivation="RightClick" TrayRightMouseUp="NotifyIcon_TrayRightMouseUp" TrayMiddleMouseDown="NotifyIcon_TrayMiddleMouseDown" TrayMouseDoubleClick="NotifyIcon_TrayMouseDoubleClick">
             <!--<tb:TaskbarIcon.ContextMenu>
@@ -41,6 +42,7 @@
                         <TextBlock Text="{lex:Loc HotkeysAbout}" TextDecorations="Underline" Foreground="{DynamicResource AccentColor}" Cursor="Hand" x:Uid="hotkeysText" />
                     </Button>
                     <Button Content="Background…" Margin="4,0" Click="ChooseBackgroundBtn_Click" Height="20" Foreground="{DynamicResource ForegroundColor}" />
+                    <Button Content="GIF Overlay…" Margin="4,0" Click="ChooseOverlayBtn_Click" Height="20" Foreground="{DynamicResource ForegroundColor}" />
                     <Button x:Name="StartStopBtn" Content="{lex:Loc StartText}" Margin="10,0,4,0" Click="StartStopBtn_Click" Width="60" Height="20" Foreground="{DynamicResource ForegroundColor}" />
                 </StackPanel>
                 <Label x:Name="lastMsgLb" Content="{Binding Message}" ToolTip="{Binding Message}" Foreground="{Binding Color}" Margin="4,0,2,0" />
@@ -525,7 +527,7 @@
                             <Button Content="Reset Colors" Click="ResetCustomizationColors_Click" Padding="14,5"/>
                         </StackPanel>
                         <TextBlock Text="Background image" FontWeight="SemiBold" Margin="0,10,0,4"/>
-                        <TextBlock Text="Choose a background image using the Background… button at the bottom of the window. Animated GIF playback is not enabled yet." TextWrapping="Wrap"/>
+                        <TextBlock Text="Choose a background image using the Background… button at the bottom of the window. Animated GIFs are supported. Use GIF Overlay… to place an animated decoration over the window." TextWrapping="Wrap"/>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
