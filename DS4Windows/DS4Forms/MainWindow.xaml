@@ -499,6 +499,36 @@
                 </DockPanel>
             </TabItem>
 
+            <TabItem Header="Customization">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="18" MaxWidth="620" HorizontalAlignment="Left">
+                        <TextBlock Text="Customize the look of 死" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,8" />
+                        <TextBlock Text="Enter a color as a HEX value (for example #FF202020), then press Apply Colors." TextWrapping="Wrap" Margin="0,0,0,14" />
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="190"/><ColumnDefinition Width="150"/></Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="34"/><RowDefinition Height="34"/><RowDefinition Height="34"/><RowDefinition Height="34"/><RowDefinition Height="34"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="Main background" VerticalAlignment="Center"/>
+                            <TextBox x:Name="UiBackgroundColorBox" Grid.Row="0" Grid.Column="1" Text="#FFFFFFFF" VerticalContentAlignment="Center" Margin="4"/>
+                            <TextBlock Grid.Row="1" Text="Panels / rectangles" VerticalAlignment="Center"/>
+                            <TextBox x:Name="UiPanelColorBox" Grid.Row="1" Grid.Column="1" Text="#FFF0F0F0" VerticalContentAlignment="Center" Margin="4"/>
+                            <TextBlock Grid.Row="2" Text="Text" VerticalAlignment="Center"/>
+                            <TextBox x:Name="UiTextColorBox" Grid.Row="2" Grid.Column="1" Text="#FF000000" VerticalContentAlignment="Center" Margin="4"/>
+                            <TextBlock Grid.Row="3" Text="Accent / highlights" VerticalAlignment="Center"/>
+                            <TextBox x:Name="UiAccentColorBox" Grid.Row="3" Grid.Column="1" Text="#FF0066CC" VerticalContentAlignment="Center" Margin="4"/>
+                            <TextBlock Grid.Row="4" Text="Top tab bar" VerticalAlignment="Center"/>
+                            <TextBox x:Name="UiTopBarColorBox" Grid.Row="4" Grid.Column="1" Text="#FFF0F0F0" VerticalContentAlignment="Center" Margin="4"/>
+                        </Grid>
+                        <StackPanel Orientation="Horizontal" Margin="0,8,0,12">
+                            <Button Content="Apply Colors" Click="ApplyCustomizationColors_Click" Padding="14,5" Margin="0,0,8,0"/>
+                            <Button Content="Reset Colors" Click="ResetCustomizationColors_Click" Padding="14,5"/>
+                        </StackPanel>
+                        <TextBlock Text="Background image" FontWeight="SemiBold" Margin="0,10,0,4"/>
+                        <TextBlock Text="Choose a background image using the Background… button at the bottom of the window. Animated GIF playback is not enabled yet." TextWrapping="Wrap"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
         </TabControl>
         </DockPanel>
     </Grid>
