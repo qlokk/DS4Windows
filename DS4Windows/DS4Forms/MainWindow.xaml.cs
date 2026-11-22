@@ -150,10 +150,130 @@ namespace DS4WinWPF.DS4Forms
             CustomBackgroundImage.Source = image;
         }
 
+
+        private string CustomizationSettingsPath
+        {
+            get
+            {
+                string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DS4Windows");
+                Directory.CreateDirectory(folder);
+                return Path.Combine(folder, "custom-ui-colors.txt");
+            }
+        }
+
+        private void LoadCustomizationColors()
+        {
+            try
+            {
+                if (!File.Exists(CustomizationSettingsPath))
+                    return;
+
+                string[] values = File.ReadAllLines(CustomizationSettingsPath);
+                if (values.Length >= 5)
+                {
+                    UiBackgroundColorBox.Text = values[0];
+                    UiPanelColorBox.Text = values[1];
+                    UiTextColorBox.Text = values[2];
+                    UiAccentColorBox.Text = values[3];
+                    UiTopBarColorBox.Text = values[4];
+                    ApplyCustomizationColors(false);
+                }
+            }
+            catch
+            {
+                // Ignore invalid customization settings and keep the default theme.
+            }
+        }
+
+        private bool TryGetCustomizationBrush(string value, out SolidColorBrush brush)
+        {
+            brush = null;
+            try
+            {
+                var color = (Color)ColorConverter.ConvertFromString(value);
+                brush = new SolidColorBrush(color);
+                brush.Freeze();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private void ApplyCustomizationColors_Click(object sender, RoutedEventArgs e)
+        {
+            ApplyCustomizationColors(true);
+        }
+
+        private void ApplyCustomizationColors(bool save)
+        {
+            SolidColorBrush background, panel, foreground, accent, topBar;
+            if (!TryGetCustomizationBrush(UiBackgroundColorBox.Text, out background) ||
+                !TryGetCustomizationBrush(UiPanelColorBox.Text, out panel) ||
+                !TryGetCustomizationBrush(UiTextColorBox.Text, out foreground) ||
+                !TryGetCustomizationBrush(UiAccentColorBox.Text, out accent) ||
+                !TryGetCustomizationBrush(UiTopBarColorBox.Text, out topBar))
+            {
+                MessageBox.Show(this, "One or more colors are invalid. Use HEX values such as #FF202020.", "Customization", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            Application.Current.Resources["BackgroundColor"] = background;
+            Application.Current.Resources["SecondaryColor"] = panel;
+            Application.Current.Resources["ForegroundColor"] = foreground;
+            Application.Current.Resources["AccentColor"] = accent;
+            Background = background;
+            mainTabCon.Background = topBar;
+
+            if (save)
+            {
+                try
+                {
+                    File.WriteAllLines(CustomizationSettingsPath, new[]
+                    {
+                        UiBackgroundColorBox.Text.Trim(),
+                        UiPanelColorBox.Text.Trim(),
+                        UiTextColorBox.Text.Trim(),
+                        UiAccentColorBox.Text.Trim(),
+                        UiTopBarColorBox.Text.Trim()
+                    });
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this, "Colors were applied, but could not be saved. " + ex.Message, "Customization", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+        }
+
+        private void ResetCustomizationColors_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (File.Exists(CustomizationSettingsPath))
+                    File.Delete(CustomizationSettingsPath);
+            }
+            catch { }
+
+            UiBackgroundColorBox.Text = "#FFFFFFFF";
+            UiPanelColorBox.Text = "#FFF0F0F0";
+            UiTextColorBox.Text = "#FF000000";
+            UiAccentColorBox.Text = "#FF0066CC";
+            UiTopBarColorBox.Text = "#FFF0F0F0";
+
+            Application.Current.Resources.Remove("BackgroundColor");
+            Application.Current.Resources.Remove("SecondaryColor");
+            Application.Current.Resources.Remove("ForegroundColor");
+            Application.Current.Resources.Remove("AccentColor");
+            Background = SystemColors.WindowBrush;
+            mainTabCon.ClearValue(Control.BackgroundProperty);
+        }
+
         public MainWindow(ArgumentParser parser)
         {
             InitializeComponent();
             LoadCustomBackground();
+            LoadCustomizationColors();
 
             mainWinVM = new MainWindowsViewModel();
             DataContext = mainWinVM;
