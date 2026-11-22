@@ -32,6 +32,7 @@ using Microsoft.Win32;
 using System.Windows.Interop;
 using System.Diagnostics;
 using System.IO;
+using WpfAnimatedGif;
 using System.Management;
 using NonFormTimer = System.Timers.Timer;
 using System.Runtime.InteropServices;
@@ -141,14 +142,77 @@ namespace DS4WinWPF.DS4Forms
 
         private void ApplyCustomBackground(string path)
         {
+            ApplyImage(CustomBackgroundImage, path);
+        }
+
+        private string CustomOverlaySettingsPath
+        {
+            get
+            {
+                string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DS4Windows");
+                Directory.CreateDirectory(folder);
+                return Path.Combine(folder, "custom-overlay.txt");
+            }
+        }
+
+        private void ChooseOverlayBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog
+            {
+                Title = "Choose an animated GIF overlay",
+                Filter = "Animated GIF|*.gif|Image files|*.png;*.jpg;*.jpeg;*.bmp",
+                CheckFileExists = true
+            };
+            if (dialog.ShowDialog(this) == true)
+            {
+                try
+                {
+                    File.WriteAllText(CustomOverlaySettingsPath, dialog.FileName);
+                    ApplyImage(CustomOverlayImage, dialog.FileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this, "Could not load that overlay. " + ex.Message, "死", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+        }
+
+        private void LoadCustomOverlay()
+        {
+            try
+            {
+                if (File.Exists(CustomOverlaySettingsPath))
+                {
+                    string path = File.ReadAllText(CustomOverlaySettingsPath).Trim();
+                    if (File.Exists(path))
+                        ApplyImage(CustomOverlayImage, path);
+                }
+            }
+            catch
+            {
+                // Ignore missing or invalid overlay files.
+            }
+        }
+
+        private void ApplyImage(Image target, string path)
+        {
             var image = new BitmapImage();
             image.BeginInit();
             image.CacheOption = BitmapCacheOption.OnLoad;
             image.UriSource = new Uri(path, UriKind.Absolute);
             image.EndInit();
             image.Freeze();
-            CustomBackgroundImage.Source = image;
+
+            if (string.Equals(Path.GetExtension(path), ".gif", StringComparison.OrdinalIgnoreCase))
+                ImageBehavior.SetAnimatedSource(target, image);
+            else
+            {
+                ImageBehavior.SetAnimatedSource(target, null);
+                target.Source = image;
+            }
         }
+
+
 
 
         private string CustomizationSettingsPath
@@ -273,6 +337,7 @@ namespace DS4WinWPF.DS4Forms
         {
             InitializeComponent();
             LoadCustomBackground();
+            LoadCustomOverlay();
             LoadCustomizationColors();
 
             mainWinVM = new MainWindowsViewModel();
