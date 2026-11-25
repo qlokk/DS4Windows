@@ -509,7 +509,7 @@
                         <Grid Margin="0,0,0,8">
                             <Grid.ColumnDefinitions><ColumnDefinition Width="190"/><ColumnDefinition Width="150"/></Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="34"/><RowDefinition Height="34"/><RowDefinition Height="34"/><RowDefinition Height="34"/><RowDefinition Height="34"/><RowDefinition Height="34"/>
+                                <RowDefinition Height="34"/><RowDefinition Height="34"/><RowDefinition Height="34"/><RowDefinition Height="34"/><RowDefinition Height="34"/><RowDefinition Height="34"/><RowDefinition Height="34"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Text="Main background" VerticalAlignment="Center"/>
                             <TextBox x:Name="UiBackgroundColorBox" Grid.Row="0" Grid.Column="1" Text="#FFFFFFFF" VerticalContentAlignment="Center" Margin="4"/>
@@ -523,6 +523,8 @@
                             <TextBox x:Name="UiTopBarColorBox" Grid.Row="4" Grid.Column="1" Text="#FFF0F0F0" VerticalContentAlignment="Center" Margin="4"/>
                             <TextBlock Grid.Row="5" Text="Borders / separator lines" VerticalAlignment="Center"/>
                             <TextBox x:Name="UiBorderColorBox" Grid.Row="5" Grid.Column="1" Text="#FFC8C8C8" VerticalContentAlignment="Center" Margin="4"/>
+                            <TextBlock Grid.Row="6" Text="Controller preview background" VerticalAlignment="Center"/>
+                            <TextBox x:Name="ControllerPreviewColorBox" Grid.Row="6" Grid.Column="1" Text="#00000000" VerticalContentAlignment="Center" Margin="4"/>
                         </Grid>
                         <StackPanel Orientation="Horizontal" Margin="0,8,0,12">
                             <Button Content="Apply Colors" Click="ApplyCustomizationColors_Click" Padding="14,5" Margin="0,0,8,0"/>
