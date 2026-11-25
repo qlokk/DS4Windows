@@ -233,7 +233,7 @@ namespace DS4WinWPF.DS4Forms
                     return;
 
                 string[] values = File.ReadAllLines(CustomizationSettingsPath);
-                if (values.Length >= 7)
+                if (values.Length >= 6)
                 {
                     UiBackgroundColorBox.Text = values[0];
                     UiPanelColorBox.Text = values[1];
@@ -241,7 +241,7 @@ namespace DS4WinWPF.DS4Forms
                     UiAccentColorBox.Text = values[3];
                     UiTopBarColorBox.Text = values[4];
                     UiBorderColorBox.Text = values[5];
-                    ControllerPreviewColorBox.Text = values[6];
+                    ControllerPreviewColorBox.Text = values.Length >= 7 ? values[6] : "#00000000";
                     ApplyCustomizationColors(false);
                 }
             }
