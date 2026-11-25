@@ -233,7 +233,7 @@ namespace DS4WinWPF.DS4Forms
                     return;
 
                 string[] values = File.ReadAllLines(CustomizationSettingsPath);
-                if (values.Length >= 6)
+                if (values.Length >= 7)
                 {
                     UiBackgroundColorBox.Text = values[0];
                     UiPanelColorBox.Text = values[1];
@@ -241,6 +241,7 @@ namespace DS4WinWPF.DS4Forms
                     UiAccentColorBox.Text = values[3];
                     UiTopBarColorBox.Text = values[4];
                     UiBorderColorBox.Text = values[5];
+                    ControllerPreviewColorBox.Text = values[6];
                     ApplyCustomizationColors(false);
                 }
             }
@@ -273,13 +274,14 @@ namespace DS4WinWPF.DS4Forms
 
         private void ApplyCustomizationColors(bool save)
         {
-            SolidColorBrush background, panel, foreground, accent, topBar, border;
+            SolidColorBrush background, panel, foreground, accent, topBar, border, controllerPreview;
             if (!TryGetCustomizationBrush(UiBackgroundColorBox.Text, out background) ||
                 !TryGetCustomizationBrush(UiPanelColorBox.Text, out panel) ||
                 !TryGetCustomizationBrush(UiTextColorBox.Text, out foreground) ||
                 !TryGetCustomizationBrush(UiAccentColorBox.Text, out accent) ||
                 !TryGetCustomizationBrush(UiTopBarColorBox.Text, out topBar) ||
-                !TryGetCustomizationBrush(UiBorderColorBox.Text, out border))
+                !TryGetCustomizationBrush(UiBorderColorBox.Text, out border) ||
+                !TryGetCustomizationBrush(ControllerPreviewColorBox.Text, out controllerPreview))
             {
                 MessageBox.Show(this, "One or more colors are invalid. Use HEX values such as #FF202020.", "Customization", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
@@ -290,6 +292,7 @@ namespace DS4WinWPF.DS4Forms
             Application.Current.Resources["ForegroundColor"] = foreground;
             Application.Current.Resources["AccentColor"] = accent;
             Application.Current.Resources["BorderColor"] = border;
+            Application.Current.Resources["ControllerPreviewBackgroundColor"] = controllerPreview;
             Background = background;
             mainTabCon.Background = topBar;
 
@@ -304,7 +307,8 @@ namespace DS4WinWPF.DS4Forms
                         UiTextColorBox.Text.Trim(),
                         UiAccentColorBox.Text.Trim(),
                         UiTopBarColorBox.Text.Trim(),
-                        UiBorderColorBox.Text.Trim()
+                        UiBorderColorBox.Text.Trim(),
+                        ControllerPreviewColorBox.Text.Trim()
                     });
                 }
                 catch (Exception ex)
@@ -329,12 +333,14 @@ namespace DS4WinWPF.DS4Forms
             UiAccentColorBox.Text = "#FF0066CC";
             UiTopBarColorBox.Text = "#FFF0F0F0";
             UiBorderColorBox.Text = "#FFC8C8C8";
+            ControllerPreviewColorBox.Text = "#00000000";
 
             Application.Current.Resources.Remove("BackgroundColor");
             Application.Current.Resources.Remove("SecondaryColor");
             Application.Current.Resources.Remove("ForegroundColor");
             Application.Current.Resources.Remove("AccentColor");
             Application.Current.Resources.Remove("BorderColor");
+            Application.Current.Resources.Remove("ControllerPreviewBackgroundColor");
             Background = SystemColors.WindowBrush;
             mainTabCon.ClearValue(Control.BackgroundProperty);
         }
